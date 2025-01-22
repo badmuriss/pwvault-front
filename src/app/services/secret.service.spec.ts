@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { KeyVaultService } from './keyvault.service';
+import { SecretService } from './secret.service';
 
-describe('SecretsService', () => {
-  let service: KeyVaultService;
+describe('SecretService', () => {
+  let service: SecretService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(KeyVaultService);
+    service = TestBed.inject(SecretService);
   });
 
   it('should be created', () => {
