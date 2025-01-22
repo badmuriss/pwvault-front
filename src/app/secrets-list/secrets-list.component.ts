@@ -3,24 +3,37 @@ import { SecretService } from '../services/secret.service';
 import {
   SecretListResponse,
   SecretCreateRequest,
-  SecretUpdateRequest,
 } from '../dto/secret.dto';
+import { Router } from '@angular/router';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppRoutingModule } from '../app.routes';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-secrets-list',
   templateUrl: './secrets-list.component.html',
-  imports: [CommonModule]
+  imports: [
+    CommonModule,
+    FormsModule,
+    AppRoutingModule,
+  ],
 })
 export class SecretsListComponent implements OnInit {
   secrets: SecretListResponse[] = [];
   loading: boolean = false;
   errorMessage: string | null = null;
 
-  constructor(private secretService: SecretService) {}
+  // Define newSecret property
+  newSecret: SecretCreateRequest = {
+    name: '',
+    folder: '',
+    value: '',
+  };
+
+  constructor(private secretService: SecretService, private router: Router) {}
 
   async ngOnInit(): Promise<void> {
-    console.log(this.secrets)
     this.loadSecrets();
   }
 
@@ -31,57 +44,27 @@ export class SecretsListComponent implements OnInit {
     try {
       this.secrets = await this.secretService.listSecrets();
     } catch (error) {
-      this.errorMessage = 'Erro ao carregar segredos.';
+      this.errorMessage = 'Error when loading secrets.';
       console.error(error);
     } finally {
       this.loading = false;
     }
   }
 
-  async createSecret(): Promise<void> {
-    const newSecret: SecretCreateRequest = {
-      name: 'Novo Segredo',
-      folder: 'Pasta Padrão',
-      value: 'Valor do Segredo',
-    };
-
-    try {
-      const createdSecret = await this.secretService.createSecret(newSecret);
-      this.secrets.push(createdSecret); // Adiciona o novo segredo à lista
-    } catch (error) {
-      this.errorMessage = 'Erro ao criar segredo.';
-      console.error(error);
-    }
+  goToSecretDetail(id: string): void {
+    this.router.navigate(['/secrets', id]);
   }
 
-  async updateSecret(secretId: string): Promise<void> {
-    const updatedSecret: SecretUpdateRequest = {
-      name: 'Segredo Atualizado',
-      value: 'Novo Valor',
-    };
+  // Method to handle secret creation
+  async onCreateSecret(form: any): Promise<void> {
+    if (!form.valid) return;
 
     try {
-      const secret = await this.secretService.updateSecret(secretId, updatedSecret);
-
-      const index = this.secrets.findIndex((s) => s.id === secretId);
-      if (index !== -1) {
-        this.secrets[index] = secret;
-      }
+      const createdSecret = await this.secretService.createSecret(this.newSecret);
+      this.secrets.push(createdSecret); // Add the new secret to the list
+      form.reset(); // Reset the form
     } catch (error) {
-      this.errorMessage = 'Erro ao atualizar segredo.';
-      console.error(error);
-    }
-  }
-
-  // Método para excluir um segredo
-  async deleteSecret(secretId: string): Promise<void> {
-    try {
-      await this.secretService.deleteSecret(secretId);
-
-      // Remove o segredo da lista
-      this.secrets = this.secrets.filter((s) => s.id !== secretId);
-    } catch (error) {
-      this.errorMessage = 'Erro ao excluir segredo.';
+      this.errorMessage = 'Error creating secret.';
       console.error(error);
     }
   }
