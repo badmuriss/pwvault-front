@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login-success',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './login-success.component.html',
   styleUrl: './login-success.component.css'
 })

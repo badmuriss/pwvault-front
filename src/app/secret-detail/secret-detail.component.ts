@@ -28,7 +28,7 @@ export class SecretDetailComponent implements OnInit {
     if (this.secretId) {
       this.loadSecretDetail(this.secretId);
     } else {
-      this.errorMessage = 'ID do segredo não encontrado.';
+      this.errorMessage = `Secret with ID ${this.secretId} not found.`;
     }
   }
 
@@ -38,7 +38,21 @@ export class SecretDetailComponent implements OnInit {
     try {
       this.secretDetail = await this.secretService.getSecretDetail(id);
     } catch (error) {
-      this.errorMessage = 'Erro ao carregar os detalhes do segredo.';
+      this.errorMessage = 'Error loading secret details.';
+      console.error(error);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async deleteSecret(id: string): Promise<void> {
+    this.loading = true
+    this.errorMessage = null;
+    try {
+      await this.secretService.deleteSecret(id);
+      this.goBack();
+    } catch (error) {
+      this.errorMessage = 'Error loading secret details.';
       console.error(error);
     } finally {
       this.loading = false;
@@ -51,5 +65,9 @@ export class SecretDetailComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/secrets']);
+  }
+
+  editSecret(): void {
+    this.router.navigate(['/secrets', this.secretId, 'edit'])
   }
 }

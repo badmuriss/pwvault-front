@@ -6,6 +6,7 @@ import { authGuard } from './guards/auth.guard';
 import { LoginSuccessComponent } from './login-success/login-success.component';
 import { TokenFailComponent } from './token-fail/token-fail.component';
 import { SecretDetailComponent } from './secret-detail/secret-detail.component';
+import { SecretEditComponent } from './secret-edit/secret-edit.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -13,7 +14,8 @@ export const routes: Routes = [
   { path: 'token-fail', component: TokenFailComponent },
   { path: 'secrets', component: SecretsListComponent, canActivate: [authGuard] }, 
   { path: 'secrets/:id', component: SecretDetailComponent },
-  {path: '', redirectTo: '/login', pathMatch: 'full'}
+  { path: 'secrets/:id/edit', component: SecretEditComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full'}
 ];
 
 @NgModule({

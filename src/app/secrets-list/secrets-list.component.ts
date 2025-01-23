@@ -4,19 +4,21 @@ import {
   SecretListResponse,
   SecretCreateRequest,
 } from '../dto/secret.dto';
-import { Router } from '@angular/router';
-import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from '../app.routes';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { CreateSecretModalComponent } from '../create-secret-modal/create-secret-modal.component';
+import { Modal } from 'bootstrap';
+
 
 @Component({
   selector: 'app-secrets-list',
   templateUrl: './secrets-list.component.html',
   imports: [
+    CreateSecretModalComponent,
     CommonModule,
     FormsModule,
-    AppRoutingModule,
+    RouterModule,
   ],
 })
 export class SecretsListComponent implements OnInit {
@@ -24,7 +26,6 @@ export class SecretsListComponent implements OnInit {
   loading: boolean = false;
   errorMessage: string | null = null;
 
-  // Define newSecret property
   newSecret: SecretCreateRequest = {
     name: '',
     folder: '',
@@ -44,7 +45,7 @@ export class SecretsListComponent implements OnInit {
     try {
       this.secrets = await this.secretService.listSecrets();
     } catch (error) {
-      this.errorMessage = 'Error when loading secrets.';
+      this.errorMessage = 'Error loading secrets.';
       console.error(error);
     } finally {
       this.loading = false;
@@ -55,17 +56,10 @@ export class SecretsListComponent implements OnInit {
     this.router.navigate(['/secrets', id]);
   }
 
-  // Method to handle secret creation
-  async onCreateSecret(form: any): Promise<void> {
-    if (!form.valid) return;
-
-    try {
-      const createdSecret = await this.secretService.createSecret(this.newSecret);
-      this.secrets.push(createdSecret); // Add the new secret to the list
-      form.reset(); // Reset the form
-    } catch (error) {
-      this.errorMessage = 'Error creating secret.';
-      console.error(error);
-    }
+  openCreateSecretModal(): void {
+    const modalElement = document.querySelector('#createSecretModal');
+    const modal = new Modal(modalElement as Element);
+    modal.show();
   }
+
 }
