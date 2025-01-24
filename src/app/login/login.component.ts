@@ -16,17 +16,11 @@ export class LoginComponent implements OnInit {
 
     try {
       if (this.authService.isLoggedIn()) {
-        console.log('Usuário autenticado, redirecionando para /secrets.');
-        // Redireciona para a rota de segredos
         await this.router.navigate(['/secrets']);
       } else {
-        console.log('Usuário não autenticado, redirecionando para login externo.');
-        // Redireciona para o login externo
         await this.authService.loginRedirect();
       }
     } catch (error) {
-      console.error('Erro durante o processo de login:', error);
-      // Redireciona para uma página de erro ou exibe mensagem ao usuário
       this.router.navigate(['/token-fail']);
     }
   }
