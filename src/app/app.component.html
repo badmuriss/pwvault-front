@@ -1,1 +1,5 @@
 <router-outlet></router-outlet>
+<button class="toggle-dark-mode-btn position-fixed end-0 bottom-0 m-md-5 m-3 p-3" (click)="toggleDarkMode()">
+  <i class="bi fs-4" [ngClass]="isDarkMode ? 'bi-sun' : 'bi-moon'"></i>
+  </button>
+  

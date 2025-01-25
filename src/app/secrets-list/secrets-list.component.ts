@@ -23,8 +23,11 @@ import { Modal } from 'bootstrap';
 })
 export class SecretsListComponent implements OnInit {
   secrets: SecretListResponse[] = [];
+  secretsByFolder: { [folder: string]: SecretListResponse[] } = {};
   loading: boolean = false;
   errorMessage: string | null = null;
+
+  openFolders: Set<string> = new Set();
 
   newSecret: SecretCreateRequest = {
     name: '',
@@ -44,12 +47,27 @@ export class SecretsListComponent implements OnInit {
 
     try {
       this.secrets = await this.secretService.listSecrets();
+      this.groupSecretsByFolder();
     } catch (error) {
       this.errorMessage = 'Error loading secrets.';
       console.error(error);
     } finally {
       this.loading = false;
     }
+  }
+
+  groupSecretsByFolder(): void {
+    this.secretsByFolder = this.secrets.reduce(
+      (acc, secret) => {
+        const folder = secret.folder || 'Uncategorized';
+        if (!acc[folder]) {
+          acc[folder] = [];
+        }
+        acc[folder].push(secret);
+        return acc;
+      },
+      {} as { [folder: string]: SecretListResponse[] }
+    );
   }
 
   goToSecretDetail(id: string): void {
@@ -62,4 +80,24 @@ export class SecretsListComponent implements OnInit {
     modal.show();
   }
 
+  getFolders(): string[] {
+    return Object.keys(this.secretsByFolder);
+  }
+  
+  sanitizeId(folderName: string): string {
+    return folderName.replace(/[^a-zA-Z0-9-_]/g, '-');
+  }
+
+  toggleFolder(folder: string): void {
+    if (this.openFolders.has(folder)) {
+      this.openFolders.delete(folder);
+    } else {
+      this.openFolders.add(folder);
+    }
+  }
+
+  isFolderOpen(folder: string): boolean {
+    return this.openFolders.has(folder);
+  }
+  
 }
