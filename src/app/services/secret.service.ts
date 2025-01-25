@@ -1,7 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
-import axios from 'axios';
-import { environment } from '../../environments/environment.development';
 import {
   SecretListResponse,
   SecretDetailResponse,
