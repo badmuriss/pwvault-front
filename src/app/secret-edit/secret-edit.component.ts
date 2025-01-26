@@ -46,6 +46,7 @@ export class SecretEditComponent implements OnInit {
 
     try {
       await this.secretService.updateSecret(this.secretId, {
+        folder: this.secretDetail.folder,
         name: this.secretDetail.name,
         value: this.secretDetail.value
       });
