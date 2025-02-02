@@ -12,8 +12,6 @@ export class LoginComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) {}
 
   async ngOnInit() {
-    console.log('LoginComponent inicializado.');
-
     try {
       if (this.authService.isLoggedIn()) {
         await this.router.navigate(['/secrets']);
