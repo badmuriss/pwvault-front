@@ -81,7 +81,12 @@ export class SecretsListComponent implements OnInit {
   }
 
   getFolders(): string[] {
-    return Object.keys(this.secretsByFolder);
+    const folders = Object.keys(this.secretsByFolder);
+    return folders.sort((a, b) => {
+      if (a === 'Uncategorized') return 1;
+      if (b === 'Uncategorized') return -1;
+      return a.localeCompare(b);
+    });
   }
   
   sanitizeId(folderName: string): string {

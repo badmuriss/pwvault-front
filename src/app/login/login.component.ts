@@ -13,7 +13,8 @@ export class LoginComponent implements OnInit {
 
   async ngOnInit() {
     try {
-      if (this.authService.isLoggedIn()) {
+      const isAuthenticated = await this.authService.isLoggedIn();
+      if (isAuthenticated) {
         await this.router.navigate(['/secrets']);
       } else {
         await this.authService.loginRedirect();

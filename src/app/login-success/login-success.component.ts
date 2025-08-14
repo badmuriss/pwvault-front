@@ -15,7 +15,12 @@ export class LoginSuccessComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    try {
       await this.authService.handleLoginCallback();
       this.router.navigate(['/secrets']);
+    } catch (error) {
+      console.error('Login callback failed:', error);
+      this.router.navigate(['/token-fail']);
+    }
   }
 }

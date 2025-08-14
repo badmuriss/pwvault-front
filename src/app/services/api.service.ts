@@ -3,15 +3,13 @@ import { environment } from '../../environments/environment';
 
 const api = axios.create({
   baseURL: environment.PWVAULT_BACK_URI, 
-  timeout: 5000, 
+  timeout: 5000,
+  withCredentials: true,
 });
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('user_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    // Token is now in httpOnly cookie, no need to manually set Authorization header
     return config;
   },
   (error) => {
